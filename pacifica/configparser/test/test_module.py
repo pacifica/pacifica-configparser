@@ -13,6 +13,6 @@ class TestModule(TestCase):
         try:
             import pacifica.configparser
             self.assertTrue(pacifica.configparser)
-        except ImportError:
+        except ImportError:  # pragma: no cover good run shouldn't get here
             hit_exception = True
         self.assertFalse(hit_exception)
