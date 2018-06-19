@@ -8,17 +8,15 @@ stages:
 - test
 
 script:
+- coverage run --include='pacifica/*' -m pytest -v
+- coverage report -m --fail-under 100
+- if [[ $CODECLIMATE_REPO_TOKEN ]] ; then codeclimate-test-reporter; fi
 
 jobs:
   include:
   - stage: lint
     script:
     - pre-commit run -a
-  - stage: test
-    script:
-    - coverage run --include='pacifica/*' -m pytest -v
-    - coverage report -m --fail-under 100
-    - if [[ $CODECLIMATE_REPO_TOKEN ]] ; then codeclimate-test-reporter; fi
 
 install:
 - pip install -r requirements-dev.txt
