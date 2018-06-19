@@ -8,7 +8,7 @@ from argparse import ArgumentParser, FileType
 from copy import deepcopy
 try:
     from ConfigParser import SafeConfigParser
-except ImportError:
+except ImportError:  # pragma: no cover only one version of python will cover this
     from configparser import SafeConfigParser
 
 
@@ -19,7 +19,7 @@ class ConfigArgParser(object):
     @staticmethod
     def configargparser(parser, defaults, def_conf_file, env_prefix, argv=False):
         """Use defaults found in config file and return a Namespace."""
-        if not argv:
+        if not argv:  # pragma: no cover within pytest
             argv = sys.argv
         def_copy = deepcopy(defaults)
         config_parser = ArgumentParser(
