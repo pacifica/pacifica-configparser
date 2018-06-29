@@ -92,3 +92,26 @@ class TestConfigArgParse(TestCase):
         )
         self.assertEqual(args.integers, [1, 2])
         self.assertEqual(args.foo, 'baz')
+
+    def test_empty_config_file(self):
+        """Test that defaults get overridden by config."""
+        args = ConfigArgParser.configargparser(
+            self._rtfm_example(), {}, join(dirname(realpath(__file__)), 'empty.ini'),
+            'PACIFICA_CONFIGPARSE',
+            ['1', '2']
+        )
+        self.assertEqual(args.integers, [1, 2])
+        self.assertEqual(args.foo, 'blah')
+
+    def test_notfound_config_file(self):
+        """Test that defaults get overridden by config."""
+        hit_exception = False
+        try:
+            ConfigArgParser.configargparser(
+                self._rtfm_example(), {}, join(dirname(realpath(__file__)), 'notthere.ini'),
+                'PACIFICA_CONFIGPARSE',
+                ['1', '2']
+            )
+        except FileNotFoundError:
+            hit_exception = True
+        self.assertTrue(hit_exception)

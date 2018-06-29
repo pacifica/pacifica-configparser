@@ -40,13 +40,11 @@ class ConfigArgParser(object):
     @staticmethod
     def update_defaults(defaults, conf_file, action_groups):
         """Update the defaults from a config parser."""
-        if not conf_file:
-            return {}
         def_copy = deepcopy(defaults)
         config = ConfigArgParser.get_safe_parser(conf_file)
         for config_group in action_groups:
             def_copy.update(dict(config.items(config_group)))
-        def_copy.update(dict(config.items('Defaults')))
+        def_copy.update(dict(config.items('DEFAULT')))
         return def_copy
 
     @staticmethod
