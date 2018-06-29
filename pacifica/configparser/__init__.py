@@ -10,6 +10,7 @@ try:
     from ConfigParser import SafeConfigParser
 except ImportError:  # pragma: no cover only one version of python will cover this
     from configparser import SafeConfigParser
+import six
 
 
 # pylint: disable=too-few-public-methods
@@ -32,7 +33,18 @@ class ConfigArgParser(object):
         args, remaining_argv = config_parser.parse_known_args(argv)
         if args.conf_file:
             config = SafeConfigParser()
-            config.readfp(args.conf_file)
+            # seems python 2 uses readfp and python 3 uses read_file
+            # but pylint calls this as a deprecated method
+            # pylint: disable=deprecated-method
+            if six.PY2:  # pragma: no cover only with python 2
+                config.readfp(args.conf_file)
+            else:  # pragma: no cover only with python 3
+                config.read_file(args.conf_file)
+            # pylint: enable=deprecated-method
+            # pylint: disable=protected-access
+            for config_group in [x.title for x in parser._action_groups[2:] if hasattr(x, 'title')]:
+                def_copy.update(dict(config.items(config_group)))
+            # pylint: enable=protected-access
             def_copy.update(dict(config.items('Defaults')))
         for key in def_copy.keys():
             env_key = '{}_{}'.format(env_prefix.upper(), key.upper())

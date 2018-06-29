@@ -31,6 +31,26 @@ class TestConfigArgParse(TestCase):
         )
         return parser
 
+    @classmethod
+    def _group_example(cls):
+        """Test argument groups and how it shows up in ini files."""
+        parser = cls._rtfm_example()
+        group_a = parser.add_argument_group('group-a')
+        group_b = parser.add_argument_group('group-b')
+        group_a.add_argument('--bar', help='bar help')
+        group_b.add_argument('--fiz', help='fiz help')
+        return parser
+
+    def test_group_example(self):
+        """Test config groups."""
+        args = ConfigArgParser.configargparser(
+            self._group_example(), {}, join(dirname(realpath(__file__)), 'group.ini'),
+            'PACIFICA_CONFIGPARSE',
+            ['1', '2']
+        )
+        self.assertEqual(args.fiz, '5432')
+        self.assertEqual(args.bar, '5678')
+
     def test_simple_parser(self):
         """Test the RTFM argparse example."""
         args = ConfigArgParser.configargparser(
