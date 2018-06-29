@@ -112,6 +112,6 @@ class TestConfigArgParse(TestCase):
                 'PACIFICA_CONFIGPARSE',
                 ['1', '2']
             )
-        except FileNotFoundError:
+        except IOError:
             hit_exception = True
         self.assertTrue(hit_exception)
